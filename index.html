@@ -1,1 +1,465 @@
-https://claude.ai/api/organizations/afedeee9-ac4d-4c94-820b-de8df5e5228d/files/de392e5a-00e9-4690-9808-f97200b93ed2/contents
+Bash
+cat /home/user/260602test/index.html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 제안서 생성기</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      color: #1a202c;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header h1 { font-size: 1.5rem; font-weight: 700; }
+    header p { font-size: 0.9rem; opacity: 0.85; margin-top: 2px; }
+
+    .icon { font-size: 2rem; }
+
+    main {
+      max-width: 960px;
+      margin: 32px auto;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #4b5563;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #1a202c;
+      background: #fafafa;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+      background: white;
+    }
+
+    textarea { resize: vertical; min-height: 160px; line-height: 1.6; }
+
+    .api-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .api-row > div { flex: 1; }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      border-radius: 10px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .hint {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    #status {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    #status.loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    #status.error {
+      display: block;
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid #bfdbfe;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #result-section { display: none; }
+
+    #result-text {
+      white-space: pre-wrap;
+      line-height: 1.75;
+      font-size: 0.95rem;
+      color: #1a202c;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 200px;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      justify-content: flex-end;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #ede9fe;
+      color: #7c3aed;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 16px 0;
+    }
+
+    #char-count { font-size: 0.78rem; color: #9ca3af; text-align: right; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="icon">📄</div>
+  <div>
+    <h1>AI 제안서 생성기</h1>
+    <p>기존 제안서 양식을 참고해 새 제안서를 자동으로 생성합니다</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- API Key -->
+  <div class="card">
+    <h2>🔑 API 설정 <span class="tag">Gemini</span></h2>
+    <div class="api-row">
+      <div>
+        <label for="apiKey">Google AI API Key</label>
+        <input type="password" id="apiKey" placeholder="AIza..." autocomplete="off" />
+        <p class="hint">API 키는 브라우저에서만 사용되며 서버로 전송되지 않습니다.</p>
+      </div>
+      <button class="btn btn-secondary" onclick="toggleKey()">보기</button>
+      <button class="btn btn-secondary" onclick="saveKey()">저장</button>
+    </div>
+  </div>
+
+  <!-- Template -->
+  <div class="card">
+    <h2>📋 제안서 양식 (참고용)</h2>
+    <div class="field">
+      <label for="template">기존 제안서 내용을 붙여넣으세요</label>
+      <textarea id="template" placeholder="여기에 참고할 제안서 양식이나 예시를 붙여넣으세요.&#10;&#10;구조, 문체, 항목 구성 등을 AI가 학습해 새 제안서를 작성합니다."></textarea>
+      <div id="char-count">0자</div>
+    </div>
+    <div class="field">
+      <label for="templateNote">양식 관련 특이사항 (선택)</label>
+      <input type="text" id="templateNote" placeholder="예: 목차 순서 유지, 특정 섹션 필수 포함 등" />
+    </div>
+  </div>
+
+  <!-- New Proposal Info -->
+  <div class="card">
+    <h2>✏️ 새 제안서 정보</h2>
+    <div class="grid-2">
+      <div class="field">
+        <label for="projectName">프로젝트/사업명</label>
+        <input type="text" id="projectName" placeholder="예: 스마트시티 플랫폼 구축 사업" />
+      </div>
+      <div class="field">
+        <label for="clientName">발주처/고객사</label>
+        <input type="text" id="clientName" placeholder="예: OO시청, OO기업" />
+      </div>
+      <div class="field">
+        <label for="proposerName">제안사명</label>
+        <input type="text" id="proposerName" placeholder="예: (주)우리회사" />
+      </div>
+      <div class="field">
+        <label for="budget">예산/규모</label>
+        <input type="text" id="budget" placeholder="예: 5억원, 6개월" />
+      </div>
+    </div>
+    <div class="field">
+      <label for="description">사업 목적 및 주요 내용</label>
+      <textarea id="description" style="min-height:120px;" placeholder="새로 작성할 제안서의 핵심 내용을 자유롭게 입력하세요.&#10;&#10;예: AI 기반 교통 관리 시스템 구축, 실시간 데이터 분석 플랫폼 개발 등"></textarea>
+    </div>
+    <div class="field">
+      <label for="tone">문서 스타일</label>
+      <select id="tone">
+        <option value="formal">공식/격식체 (관공서, 대기업)</option>
+        <option value="professional">전문/비즈니스체 (일반 기업)</option>
+        <option value="friendly">친근/스타트업체</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="extraReq">추가 요구사항 (선택)</label>
+      <input type="text" id="extraReq" placeholder="예: 차별화 포인트 강조, 기술 역량 중심으로 작성" />
+    </div>
+  </div>
+
+  <!-- Generate Button -->
+  <button class="btn btn-generate" onclick="generate()">🚀 제안서 생성하기</button>
+
+  <!-- Status -->
+  <div id="status"></div>
+
+  <!-- Result -->
+  <div id="result-section" class="card">
+    <h2>📝 생성된 제안서</h2>
+    <hr class="section-divider" />
+    <div id="result-text"></div>
+    <div class="result-actions">
+      <button class="btn btn-secondary" onclick="copyResult()">📋 복사</button>
+      <button class="btn btn-secondary" onclick="downloadResult()">⬇️ 다운로드</button>
+      <button class="btn btn-primary" onclick="generate()">🔄 다시 생성</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  // Load saved key
+  window.addEventListener('load', () => {
+    const saved = localStorage.getItem('gemini_api_key');
+    if (saved) $('apiKey').value = saved;
+
+    $('template').addEventListener('input', () => {
+      $('char-count').textContent = $('template').value.length.toLocaleString() + '자';
+    });
+  });
+
+  function toggleKey() {
+    const el = $('apiKey');
+    el.type = el.type === 'password' ? 'text' : 'password';
+  }
+
+  function saveKey() {
+    const key = $('apiKey').value.trim();
+    if (!key) { alert('API 키를 입력하세요.'); return; }
+    localStorage.setItem('gemini_api_key', key);
+    alert('API 키가 저장되었습니다.');
+  }
+
+  function setStatus(type, msg) {
+    const el = $('status');
+    el.className = type;
+    if (type === 'loading') {
+      el.style.display = 'flex';
+      el.innerHTML = `<div class="spinner"></div><span>${msg}</span>`;
+    } else if (type === 'error') {
+      el.style.display = 'block';
+      el.textContent = '⚠️ ' + msg;
+    } else {
+      el.style.display = 'none';
+    }
+  }
+
+  const TONE_MAP = {
+    formal: '공식적이고 격식 있는 문어체로, 존댓말을 사용하며 관공서 제출용에 적합하게',
+    professional: '전문적이고 명확한 비즈니스 문체로',
+    friendly: '친근하고 간결하며 스타트업 감성의 문체로',
+  };
+
+  async function generate() {
+    const apiKey = $('apiKey').value.trim();
+    const template = $('template').value.trim();
+    const projectName = $('projectName').value.trim();
+    const description = $('description').value.trim();
+
+    if (!apiKey) { setStatus('error', 'API 키를 입력하세요.'); return; }
+    if (!template) { setStatus('error', '참고할 제안서 양식을 입력하세요.'); return; }
+    if (!projectName || !description) { setStatus('error', '프로젝트명과 사업 목적은 필수입니다.'); return; }
+
+    const clientName = $('clientName').value.trim();
+    const proposerName = $('proposerName').value.trim();
+    const budget = $('budget').value.trim();
+    const tone = $('tone').value;
+    const templateNote = $('templateNote').value.trim();
+    const extraReq = $('extraReq').value.trim();
+
+    $('result-section').style.display = 'none';
+    setStatus('loading', 'Gemini AI가 제안서를 작성 중입니다...');
+
+    const prompt = `당신은 전문 제안서 작성 전문가입니다.
+
+[참고 제안서 양식]
+${template}
+${templateNote ? `\n[양식 관련 주의사항]\n${templateNote}` : ''}
+
+위 제안서 양식을 철저히 분석하여 구조, 목차, 섹션 구성, 문서 형식을 파악하세요.
+그리고 아래 새 프로젝트 정보를 바탕으로 동일한 양식과 구조를 따르는 완성도 높은 제안서를 작성하세요.
+
+[새 제안서 정보]
+- 프로젝트/사업명: ${projectName}
+${clientName ? `- 발주처/고객사: ${clientName}` : ''}
+${proposerName ? `- 제안사: ${proposerName}` : ''}
+${budget ? `- 예산/규모: ${budget}` : ''}
+- 사업 목적 및 주요 내용: ${description}
+${extraReq ? `- 추가 요구사항: ${extraReq}` : ''}
+
+[작성 지침]
+- 문서 스타일: ${TONE_MAP[tone]} 작성
+- 참고 양식의 목차와 섹션 구조를 최대한 유지
+- 각 섹션을 충실하게 작성하고 구체적인 내용을 포함
+- 전문적이고 설득력 있는 제안서 완성
+- 마크다운 형식 사용 (제목에 #, ## 등 활용)
+
+완성된 제안서 전문을 작성하세요:`;
+
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 8192,
+            }
+          })
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        const msg = err?.error?.message || `HTTP ${res.status}`;
+        throw new Error(msg);
+      }
+
+      const data = await res.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error('응답에서 텍스트를 찾을 수 없습니다.');
+
+      $('result-text').textContent = text;
+      $('result-section').style.display = 'block';
+      setStatus('none', '');
+      $('result-section').scrollIntoView({ behavior: 'smooth' });
+
+    } catch (e) {
+      setStatus('error', e.message);
+    }
+  }
+
+  function copyResult() {
+    const text = $('result-text').textContent;
+    navigator.clipboard.writeText(text).then(() => alert('클립보드에 복사되었습니다.'));
+  }
+
+  function downloadResult() {
+    const text = $('result-text').textContent;
+    const name = $('projectName').value.trim() || '제안서';
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${name}_제안서.txt`;
+    a.click();
+  }
+</script>
+</body>
+</html>
