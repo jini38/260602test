@@ -1,5 +1,3 @@
-Bash
-cat /home/user/260602test/index.html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -27,7 +25,6 @@ cat /home/user/260602test/index.html
 
     header h1 { font-size: 1.5rem; font-weight: 700; }
     header p { font-size: 0.9rem; opacity: 0.85; margin-top: 2px; }
-
     .icon { font-size: 2rem; }
 
     main {
@@ -50,7 +47,7 @@ cat /home/user/260602test/index.html
       font-size: 1rem;
       font-weight: 600;
       color: #374151;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -79,7 +76,7 @@ cat /home/user/260602test/index.html
       font-family: inherit;
     }
 
-    input:focus, textarea:focus {
+    input:focus, textarea:focus, select:focus {
       outline: none;
       border-color: #2563eb;
       box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
@@ -88,72 +85,70 @@ cat /home/user/260602test/index.html
 
     textarea { resize: vertical; min-height: 160px; line-height: 1.6; }
 
-    .api-row {
+    .row {
       display: flex;
       gap: 10px;
       align-items: flex-end;
     }
-
-    .api-row > div { flex: 1; }
+    .row > .grow { flex: 1; }
 
     .btn {
-      padding: 10px 20px;
+      padding: 10px 18px;
       border: none;
       border-radius: 8px;
       font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
+      transition: opacity 0.15s, transform 0.1s;
       white-space: nowrap;
     }
-
-    .btn:active { transform: scale(0.98); }
+    .btn:active { transform: scale(0.97); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #374151;
-    }
-
+    .btn-primary { background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; }
+    .btn-secondary { background: #e5e7eb; color: #374151; }
     .btn-generate {
       width: 100%;
-      padding: 14px;
-      font-size: 1rem;
+      padding: 15px;
+      font-size: 1.05rem;
       background: linear-gradient(135deg, #2563eb, #7c3aed);
       color: white;
       border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: opacity 0.2s;
     }
+    .btn-generate:hover { opacity: 0.92; }
+    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 620px) { .grid-2 { grid-template-columns: 1fr; } }
 
     .field { margin-bottom: 16px; }
     .field:last-child { margin-bottom: 0; }
 
-    .hint {
-      font-size: 0.78rem;
-      color: #9ca3af;
-      margin-top: 4px;
+    .hint { font-size: 0.78rem; color: #9ca3af; margin-top: 5px; line-height: 1.4; }
+
+    .tag {
+      display: inline-block;
+      background: #ede9fe;
+      color: #7c3aed;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      letter-spacing: 0.02em;
     }
+
+    .section-divider { border: none; border-top: 1px solid #e5e7eb; margin: 14px 0; }
 
     #status {
       display: none;
-      padding: 12px 16px;
+      padding: 13px 16px;
       border-radius: 8px;
       font-size: 0.9rem;
       font-weight: 500;
     }
-
     #status.loading {
       display: flex;
       align-items: center;
@@ -161,36 +156,34 @@ cat /home/user/260602test/index.html
       background: #eff6ff;
       color: #1d4ed8;
     }
-
     #status.error {
       display: block;
       background: #fef2f2;
       color: #dc2626;
+      white-space: pre-wrap;
     }
 
     .spinner {
-      width: 18px;
-      height: 18px;
+      width: 18px; height: 18px;
       border: 3px solid #bfdbfe;
       border-top-color: #2563eb;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.75s linear infinite;
       flex-shrink: 0;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
     #result-section { display: none; }
 
     #result-text {
       white-space: pre-wrap;
-      line-height: 1.75;
+      line-height: 1.8;
       font-size: 0.95rem;
       color: #1a202c;
       background: #f9fafb;
       border: 1px solid #e5e7eb;
       border-radius: 8px;
-      padding: 16px;
+      padding: 18px;
       min-height: 200px;
     }
 
@@ -199,25 +192,32 @@ cat /home/user/260602test/index.html
       gap: 10px;
       margin-top: 14px;
       justify-content: flex-end;
-    }
-
-    .tag {
-      display: inline-block;
-      background: #ede9fe;
-      color: #7c3aed;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 99px;
-    }
-
-    .section-divider {
-      border: none;
-      border-top: 1px solid #e5e7eb;
-      margin: 16px 0;
+      flex-wrap: wrap;
     }
 
     #char-count { font-size: 0.78rem; color: #9ca3af; text-align: right; margin-top: 4px; }
+
+    .model-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .model-chip {
+      font-size: 0.78rem;
+      padding: 3px 10px;
+      border-radius: 99px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      color: #374151;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .model-chip:hover {
+      border-color: #2563eb;
+      color: #2563eb;
+      background: #eff6ff;
+    }
   </style>
 </head>
 <body>
@@ -232,44 +232,59 @@ cat /home/user/260602test/index.html
 
 <main>
 
-  <!-- API Key -->
+  <!-- API 설정 -->
   <div class="card">
-    <h2>🔑 API 설정 <span class="tag">Gemini</span></h2>
-    <div class="api-row">
-      <div>
-        <label for="apiKey">Google AI API Key</label>
-        <input type="password" id="apiKey" placeholder="AIza..." autocomplete="off" />
-        <p class="hint">API 키는 브라우저에서만 사용되며 서버로 전송되지 않습니다.</p>
+    <h2>🔑 API 설정 <span class="tag">Google AI</span></h2>
+
+    <div class="field">
+      <label for="apiKey">Google AI API Key</label>
+      <div class="row">
+        <div class="grow">
+          <input type="password" id="apiKey" placeholder="AIzaSy..." autocomplete="off" />
+        </div>
+        <button class="btn btn-secondary" onclick="toggleKey()">보기</button>
+        <button class="btn btn-secondary" onclick="saveKey()">저장</button>
       </div>
-      <button class="btn btn-secondary" onclick="toggleKey()">보기</button>
-      <button class="btn btn-secondary" onclick="saveKey()">저장</button>
+      <p class="hint">API 키는 브라우저에만 저장되며 외부로 전송되지 않습니다. 발급: <strong>aistudio.google.com/apikey</strong></p>
+    </div>
+
+    <div class="field">
+      <label for="modelName">모델명</label>
+      <input type="text" id="modelName" value="gemini-2.5-flash-preview-05-20" placeholder="gemini-..." />
+      <div class="model-list">
+        <span class="model-chip" onclick="setModel('gemini-2.5-flash-preview-05-20')">gemini-2.5-flash-preview</span>
+        <span class="model-chip" onclick="setModel('gemini-2.0-flash')">gemini-2.0-flash</span>
+        <span class="model-chip" onclick="setModel('gemini-1.5-flash-latest')">gemini-1.5-flash-latest</span>
+        <span class="model-chip" onclick="setModel('gemini-1.5-pro-latest')">gemini-1.5-pro-latest</span>
+      </div>
+      <p class="hint">사용 가능한 모델 목록: <strong>aistudio.google.com</strong> → "Get API key" → 모델 확인</p>
     </div>
   </div>
 
-  <!-- Template -->
+  <!-- 제안서 양식 -->
   <div class="card">
-    <h2>📋 제안서 양식 (참고용)</h2>
+    <h2>📋 제안서 양식 <span class="tag">참고용</span></h2>
     <div class="field">
-      <label for="template">기존 제안서 내용을 붙여넣으세요</label>
-      <textarea id="template" placeholder="여기에 참고할 제안서 양식이나 예시를 붙여넣으세요.&#10;&#10;구조, 문체, 항목 구성 등을 AI가 학습해 새 제안서를 작성합니다."></textarea>
+      <label for="template">기존 제안서를 붙여넣으세요</label>
+      <textarea id="template" placeholder="여기에 참고할 제안서 양식이나 예시를 붙여넣으세요.&#10;&#10;구조, 문체, 목차, 항목 구성 등을 AI가 분석해 새 제안서를 작성합니다."></textarea>
       <div id="char-count">0자</div>
     </div>
     <div class="field">
-      <label for="templateNote">양식 관련 특이사항 (선택)</label>
-      <input type="text" id="templateNote" placeholder="예: 목차 순서 유지, 특정 섹션 필수 포함 등" />
+      <label for="templateNote">양식 관련 특이사항 <span style="color:#9ca3af;font-weight:400">(선택)</span></label>
+      <input type="text" id="templateNote" placeholder="예: 목차 순서 반드시 유지, 표 형식 포함, 특정 섹션 필수 등" />
     </div>
   </div>
 
-  <!-- New Proposal Info -->
+  <!-- 새 제안서 정보 -->
   <div class="card">
     <h2>✏️ 새 제안서 정보</h2>
     <div class="grid-2">
       <div class="field">
-        <label for="projectName">프로젝트/사업명</label>
+        <label for="projectName">프로젝트 / 사업명 <span style="color:#ef4444">*</span></label>
         <input type="text" id="projectName" placeholder="예: 스마트시티 플랫폼 구축 사업" />
       </div>
       <div class="field">
-        <label for="clientName">발주처/고객사</label>
+        <label for="clientName">발주처 / 고객사</label>
         <input type="text" id="clientName" placeholder="예: OO시청, OO기업" />
       </div>
       <div class="field">
@@ -277,42 +292,39 @@ cat /home/user/260602test/index.html
         <input type="text" id="proposerName" placeholder="예: (주)우리회사" />
       </div>
       <div class="field">
-        <label for="budget">예산/규모</label>
+        <label for="budget">예산 / 규모</label>
         <input type="text" id="budget" placeholder="예: 5억원, 6개월" />
       </div>
     </div>
     <div class="field">
-      <label for="description">사업 목적 및 주요 내용</label>
+      <label for="description">사업 목적 및 주요 내용 <span style="color:#ef4444">*</span></label>
       <textarea id="description" style="min-height:120px;" placeholder="새로 작성할 제안서의 핵심 내용을 자유롭게 입력하세요.&#10;&#10;예: AI 기반 교통 관리 시스템 구축, 실시간 데이터 분석 플랫폼 개발 등"></textarea>
     </div>
     <div class="field">
       <label for="tone">문서 스타일</label>
       <select id="tone">
-        <option value="formal">공식/격식체 (관공서, 대기업)</option>
+        <option value="formal">공식/격식체 (관공서, 대기업 제출용)</option>
         <option value="professional">전문/비즈니스체 (일반 기업)</option>
         <option value="friendly">친근/스타트업체</option>
       </select>
     </div>
     <div class="field">
-      <label for="extraReq">추가 요구사항 (선택)</label>
-      <input type="text" id="extraReq" placeholder="예: 차별화 포인트 강조, 기술 역량 중심으로 작성" />
+      <label for="extraReq">추가 요구사항 <span style="color:#9ca3af;font-weight:400">(선택)</span></label>
+      <input type="text" id="extraReq" placeholder="예: 차별화 포인트 강조, 기술 역량 중심으로 작성, 예산 절감 효과 부각" />
     </div>
   </div>
 
-  <!-- Generate Button -->
-  <button class="btn btn-generate" onclick="generate()">🚀 제안서 생성하기</button>
-
-  <!-- Status -->
+  <button class="btn-generate" id="generateBtn" onclick="generate()">🚀 제안서 생성하기</button>
   <div id="status"></div>
 
-  <!-- Result -->
+  <!-- 결과 -->
   <div id="result-section" class="card">
     <h2>📝 생성된 제안서</h2>
     <hr class="section-divider" />
     <div id="result-text"></div>
     <div class="result-actions">
       <button class="btn btn-secondary" onclick="copyResult()">📋 복사</button>
-      <button class="btn btn-secondary" onclick="downloadResult()">⬇️ 다운로드</button>
+      <button class="btn btn-secondary" onclick="downloadResult()">⬇️ TXT 다운로드</button>
       <button class="btn btn-primary" onclick="generate()">🔄 다시 생성</button>
     </div>
   </div>
@@ -322,10 +334,12 @@ cat /home/user/260602test/index.html
 <script>
   const $ = id => document.getElementById(id);
 
-  // Load saved key
   window.addEventListener('load', () => {
-    const saved = localStorage.getItem('gemini_api_key');
-    if (saved) $('apiKey').value = saved;
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey) $('apiKey').value = savedKey;
+
+    const savedModel = localStorage.getItem('gemini_model');
+    if (savedModel) $('modelName').value = savedModel;
 
     $('template').addEventListener('input', () => {
       $('char-count').textContent = $('template').value.length.toLocaleString() + '자';
@@ -341,7 +355,12 @@ cat /home/user/260602test/index.html
     const key = $('apiKey').value.trim();
     if (!key) { alert('API 키를 입력하세요.'); return; }
     localStorage.setItem('gemini_api_key', key);
-    alert('API 키가 저장되었습니다.');
+    alert('저장되었습니다.');
+  }
+
+  function setModel(name) {
+    $('modelName').value = name;
+    localStorage.setItem('gemini_model', name);
   }
 
   function setStatus(type, msg) {
@@ -366,13 +385,17 @@ cat /home/user/260602test/index.html
 
   async function generate() {
     const apiKey = $('apiKey').value.trim();
+    const modelName = $('modelName').value.trim();
     const template = $('template').value.trim();
     const projectName = $('projectName').value.trim();
     const description = $('description').value.trim();
 
     if (!apiKey) { setStatus('error', 'API 키를 입력하세요.'); return; }
+    if (!modelName) { setStatus('error', '모델명을 입력하세요.'); return; }
     if (!template) { setStatus('error', '참고할 제안서 양식을 입력하세요.'); return; }
-    if (!projectName || !description) { setStatus('error', '프로젝트명과 사업 목적은 필수입니다.'); return; }
+    if (!projectName || !description) { setStatus('error', '프로젝트명과 사업 목적 및 주요 내용은 필수입니다.'); return; }
+
+    localStorage.setItem('gemini_model', modelName);
 
     const clientName = $('clientName').value.trim();
     const proposerName = $('proposerName').value.trim();
@@ -382,7 +405,8 @@ cat /home/user/260602test/index.html
     const extraReq = $('extraReq').value.trim();
 
     $('result-section').style.display = 'none';
-    setStatus('loading', 'Gemini AI가 제안서를 작성 중입니다...');
+    $('generateBtn').disabled = true;
+    setStatus('loading', `${modelName} 모델이 제안서를 작성 중입니다...`);
 
     const prompt = `당신은 전문 제안서 작성 전문가입니다.
 
@@ -411,25 +435,19 @@ ${extraReq ? `- 추가 요구사항: ${extraReq}` : ''}
 완성된 제안서 전문을 작성하세요:`;
 
     try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-latest:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 8192,
-            }
-          })
-        }
-      );
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 8192 }
+        })
+      });
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        const msg = err?.error?.message || `HTTP ${res.status}`;
-        throw new Error(msg);
+        throw new Error(err?.error?.message || `HTTP ${res.status}`);
       }
 
       const data = await res.json();
@@ -443,12 +461,14 @@ ${extraReq ? `- 추가 요구사항: ${extraReq}` : ''}
 
     } catch (e) {
       setStatus('error', e.message);
+    } finally {
+      $('generateBtn').disabled = false;
     }
   }
 
   function copyResult() {
-    const text = $('result-text').textContent;
-    navigator.clipboard.writeText(text).then(() => alert('클립보드에 복사되었습니다.'));
+    navigator.clipboard.writeText($('result-text').textContent)
+      .then(() => alert('클립보드에 복사되었습니다.'));
   }
 
   function downloadResult() {
